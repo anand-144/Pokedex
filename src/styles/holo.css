@@ -163,3 +163,71 @@
     opacity: 0;
   }
 }
+
+/* ====== EVOLUTION RUMBLE / FLIP ====== */
+
+.evolve-anim {
+  animation: evolveRumble 0.8s ease-in-out;
+}
+
+@keyframes evolveRumble {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+  15% {
+    transform: rotate(-2deg) translateX(-3px) scale(1.02);
+  }
+  30% {
+    transform: rotate(2deg) translateX(3px) scale(1.04);
+  }
+  45% {
+    transform: rotate(-3deg) translateX(-4px) scale(1.06);
+  }
+  60% {
+    transform: rotate(3deg) translateX(4px) scale(1.08);
+  }
+  75% {
+    transform: rotate(-2deg) translateX(-2px) scale(1.05);
+  }
+  100% {
+    transform: rotate(0deg) translateX(0) scale(1);
+  }
+}
+
+/* ====== GAMEBOY-STYLE EVOLUTION MESSAGE ====== */
+
+.evo-message {
+  position: absolute;
+  left: 50%;
+  bottom: 6%;
+  transform: translateX(-50%);
+  width: 90%;
+  padding: 8px 10px;
+  border-radius: 6px;
+  background: #1a2b1a;
+  border: 2px solid #8cff8c;
+  box-shadow: 0 0 10px rgba(0, 255, 120, 0.5);
+  z-index: 60;
+}
+
+.evo-text {
+  font-family: "Press Start 2P", system-ui, monospace;
+  font-size: 9px;
+  line-height: 1.4;
+  color: #c8ffb0;
+  text-shadow: 0 0 4px rgba(0, 0, 0, 0.7);
+  animation: evoFlash 0.4s steps(2, start) infinite;
+  text-align: left;
+}
+
+@keyframes evoFlash {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.25;
+  }
+  100% {
+    opacity: 1;
+  }
+}
