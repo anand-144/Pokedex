@@ -10,15 +10,15 @@ import CardFilter from "./CardFilter";
 import { fetchPokemonCards } from "../hooks/pokemonTcgApi";
 import "../styles/holo.css";
 
-const PAGE_SIZE = 10;       // Fetch 10 from backend per batch
-const RENDER_BUFFER = 20;   // Keep max 20–30 cards in DOM
+const PAGE_SIZE = 10;   
+const RENDER_BUFFER = 20;   
 
 const PokemonCard = () => {
   const [selectedTypes, setSelectedTypes] = useState([]);
   const [search, setSearch] = useState("");
 
-  const [allCards, setAllCards] = useState([]);  // FULL DATA (lightweight)
-  const [visibleCards, setVisibleCards] = useState([]); // ONLY RENDERED cards
+  const [allCards, setAllCards] = useState([]);
+  const [visibleCards, setVisibleCards] = useState([]);
   
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);

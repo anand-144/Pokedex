@@ -30,7 +30,7 @@ const Hero = () => {
     )
     .to(logo, {
       scale: 0.5,
-      yPercent: 80,
+      yPercent: 50,
       autoAlpha: 1,
       ease: "power1.inOut"
     })
