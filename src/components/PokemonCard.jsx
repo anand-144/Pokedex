@@ -11,8 +11,8 @@ const PokemonCard = () => {
     selectedTypes.length === 0
       ? cardList
       : cardList.filter((card) =>
-          card.type.some((t) => selectedTypes.includes(t))
-        );
+        card.type.some((t) => selectedTypes.includes(t))
+      );
 
   const refs = useRef([]);
 
@@ -27,9 +27,9 @@ const PokemonCard = () => {
       id="pokemon-section"
       className="w-full bg-[#0b0f2e] py-16 px-4"
     >
-      <h2 className="text-center text-4xl font-bold text-white mb-8">
+      {/* <h2 className="text-center text-4xl font-bold text-white mb-8">
         Holo Cards
-      </h2>
+      </h2> */}
 
       <CardFilter selectedTypes={selectedTypes} setSelectedTypes={setSelectedTypes} />
 
@@ -42,11 +42,27 @@ const PokemonCard = () => {
             >
               <img src={card.image} alt="Card" className="rounded-xl" />
 
-              <div className="holo-rainbow" />
-              <div className="holo-noise" />
-              <div className="holo-sweep" />
-              <div className="tilt-glow" />
+              {/* Floating Particles */}
+              <div className="holo-particles">
+                {Array.from({ length: 12 }).map((_, i) => (
+                  <span
+                    key={i}
+                    style={{
+                      left: `${Math.random() * 90}%`,
+                      top: `${Math.random() * 90}%`,
+                      animationDelay: `${Math.random() * 2}s`,
+                      animationDuration: `${2 + Math.random() * 2}s`,
+                    }}
+                  ></span>
+                ))}
+              </div>
+
+              <div className="holo-rainbow"></div>
+              <div className="holo-noise"></div>
+              <div className="holo-sweep"></div>
+              <div className="tilt-glow"></div>
             </div>
+
           </div>
         ))}
       </div>

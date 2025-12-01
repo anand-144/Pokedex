@@ -1,6 +1,6 @@
 // src/utils/tilt.js
 
-export function applyTilt(el, maxTilt = 18) {
+export function applyTilt(el) {
   if (!el) return;
 
   const glow = el.querySelector(".tilt-glow");
@@ -9,11 +9,16 @@ export function applyTilt(el, maxTilt = 18) {
     const rect = el.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
+
     const cx = rect.width / 2;
     const cy = rect.height / 2;
 
-    const rotX = ((y - cy) / cy) * maxTilt;
-    const rotY = ((x - cx) / cx) * -maxTilt;
+    // read dynamic tilt strength
+    const strength =
+      parseFloat(getComputedStyle(el).getPropertyValue("--tilt-strength")) || 12;
+
+    const rotX = ((y - cy) / cy) * strength;
+    const rotY = ((x - cx) / cx) * -strength;
 
     el.style.transform = `
       perspective(900px)
@@ -26,14 +31,15 @@ export function applyTilt(el, maxTilt = 18) {
       glow.style.opacity = "1";
       glow.style.background = `
         radial-gradient(circle at ${x}px ${y}px,
-          rgba(255, 255, 200, 0.55),
+          rgba(255,255,200,0.5),
           transparent 70%)
       `;
     }
   };
 
   const reset = () => {
-    el.style.transform = "perspective(900px) rotateX(0) rotateY(0) scale(1)";
+    el.style.transform =
+      "perspective(900px) rotateX(0deg) rotateY(0deg) scale(1)";
     if (glow) glow.style.opacity = "0";
   };
 
