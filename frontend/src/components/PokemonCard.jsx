@@ -100,7 +100,7 @@ const PokemonCard = () => {
   }, [visibleCards]);
 
   return (
-    <div className="w-full bg-[#0b0f2e] py-16 px-4">
+    <div className="w-full bg-linear-to-r from-amber-700 via-yellow-400 to-sky-800 py-16 px-4">
       
       <CardFilter
         selectedTypes={selectedTypes}
