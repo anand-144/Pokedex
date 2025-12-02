@@ -106,12 +106,12 @@ const PokemonCard = () => {
       <div
         ref={scrollRef}
         onScroll={handleScroll}
-        className="overflow-x-auto whitespace-nowrap scrollbar-hide mt-12"
-        style={{ height: 420 }}
+        className="overflow-x-auto overflow-y-visible whitespace-nowrap scrollbar-hide mt-12 pt-7"
+        style={{ height: 480}}
       >
         <div
           style={{
-            width: allCards.length * 260,  // simulate full list width
+            width: allCards.length * 260,
             height: "100%",
             position: "relative",
           }}
