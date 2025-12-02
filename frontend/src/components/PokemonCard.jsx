@@ -10,8 +10,9 @@ import CardFilter from "./CardFilter";
 import { fetchPokemonCards } from "../hooks/pokemonTcgApi";
 import "../styles/holo.css";
 
-const PAGE_SIZE = 10;   
-const RENDER_BUFFER = 20;   
+const PAGE_SIZE = 10;
+const RENDER_BUFFER = 20;
+const CARD_WIDTH = 260;
 
 const PokemonCard = () => {
   const [selectedTypes, setSelectedTypes] = useState([]);
@@ -19,7 +20,7 @@ const PokemonCard = () => {
 
   const [allCards, setAllCards] = useState([]);
   const [visibleCards, setVisibleCards] = useState([]);
-  
+
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -27,7 +28,7 @@ const PokemonCard = () => {
   const scrollRef = useRef(null);
   const tiltRefs = useRef([]);
 
-  // 🔥 Fetch next batch of 10 cards
+  // Fetch 10 more cards
   const loadCards = useCallback(async () => {
     if (loading || !hasMore) return;
 
@@ -37,7 +38,15 @@ const PokemonCard = () => {
       const response = await fetchPokemonCards(page, PAGE_SIZE, selectedTypes, search);
       const newCards = response.data;
 
-      setAllCards((prev) => [...prev, ...newCards]);
+      setAllCards((prev) => {
+        const merged = [...prev, ...newCards];
+        return merged;
+      });
+
+      // Set initial visible cards
+      if (page === 1) {
+        setVisibleCards(newCards.slice(0, RENDER_BUFFER));
+      }
 
       const loaded = (page - 1) * PAGE_SIZE + newCards.length;
       setHasMore(loaded < response.total);
@@ -48,14 +57,14 @@ const PokemonCard = () => {
     }
 
     setLoading(false);
-  }, [page, search, selectedTypes, loading, hasMore]);
+  }, [page, selectedTypes, search, loading, hasMore]);
 
-  // 🟢 Initial load
+  // Initial load
   useEffect(() => {
     loadCards();
   }, [loadCards]);
 
-  // 🔄 Reset when filter/search changes
+  // Reset on filter/search change
   useEffect(() => {
     setAllCards([]);
     setVisibleCards([]);
@@ -64,28 +73,26 @@ const PokemonCard = () => {
     loadCards();
   }, [selectedTypes, search]);
 
-  // 🟦 SHOW limited cards as user scrolls
+  // Virtualized visibility
   const handleScroll = () => {
     const div = scrollRef.current;
     if (!div) return;
 
     const scrollRight = div.scrollLeft + div.clientWidth;
 
-    // 1️⃣ Load more data when near end
-    if (scrollRight >= div.scrollWidth - 300) {
+    if (scrollRight >= div.scrollWidth - 400) {
       loadCards();
     }
 
-    // 2️⃣ Virtualize: keep only closest 20 visible cards
-    const cardWidth = 260; // px per card
-    const startIndex = Math.max(0, Math.floor(div.scrollLeft / cardWidth) - 2);  
-    const endIndex = startIndex + RENDER_BUFFER;
+    const startIndex = Math.floor(div.scrollLeft / CARD_WIDTH) - 2;
+    const safeStart = Math.max(0, startIndex);
+    const endIndex = safeStart + RENDER_BUFFER;
 
-    const slice = allCards.slice(startIndex, endIndex);
+    const slice = allCards.slice(safeStart, endIndex);
     setVisibleCards(slice);
   };
 
-  // Apply tilt
+  // Apply tilt effect
   useEffect(() => {
     visibleCards.forEach((_, i) => {
       if (tiltRefs.current[i]) applyTilt(tiltRefs.current[i]);
@@ -94,7 +101,7 @@ const PokemonCard = () => {
 
   return (
     <div className="w-full bg-[#0b0f2e] py-16 px-4">
-      {/* Filters + Search */}
+      
       <CardFilter
         selectedTypes={selectedTypes}
         setSelectedTypes={setSelectedTypes}
@@ -102,24 +109,24 @@ const PokemonCard = () => {
         setSearch={setSearch}
       />
 
-      {/* HORIZONTAL SCROLLER */}
       <div
         ref={scrollRef}
         onScroll={handleScroll}
-        className="overflow-x-auto overflow-y-visible whitespace-nowrap scrollbar-hide mt-12 pt-7"
-        style={{ height: 480}}
+        className="smooth-scroll overflow-x-scroll overflow-y-visible no-scrollbar whitespace-nowrap mt-12 pt-7"
+        style={{ height: 480 }}
       >
         <div
           style={{
-            width: allCards.length * 260,
+            minWidth: `${allCards.length * CARD_WIDTH}px`,
+            width: `${allCards.length * CARD_WIDTH}px`,
             height: "100%",
             position: "relative",
           }}
         >
-          {/* Render ONLY virtual cards */}
+
           {visibleCards.map((card, i) => {
-            const realIndex = allCards.indexOf(card);
-            const left = realIndex * 260;
+            const globalIndex = allCards.indexOf(card);
+            const left = globalIndex * CARD_WIDTH;
 
             return (
               <div
@@ -128,7 +135,7 @@ const PokemonCard = () => {
                 style={{
                   position: "absolute",
                   left,
-                  width: 260,
+                  width: CARD_WIDTH,
                 }}
               >
                 <div className="holo-card rounded-xl w-60 relative">
@@ -144,12 +151,11 @@ const PokemonCard = () => {
               </div>
             );
           })}
+
         </div>
       </div>
 
-      {loading && (
-        <p className="text-white text-center mt-4">Loading…</p>
-      )}
+      {loading && <p className="text-white text-center mt-4">Loading…</p>}
     </div>
   );
 };
