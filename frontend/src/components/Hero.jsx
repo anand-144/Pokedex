@@ -25,11 +25,11 @@ const Hero = () => {
 
     tl.fromTo(
       logo,
-      { scale: 1.4, yPercent: -20, autoAlpha: 0.5 }, 
+      { scale: 1.4, yPercent: -50, autoAlpha: 0.5 }, 
       { scale: 1.2, yPercent: -20, autoAlpha: 0.3, ease: "power1.out" } 
     )
     .to(logo, {
-      scale: 0.5,
+      scale: 0.2,
       yPercent: 50,
       autoAlpha: 1,
       ease: "power1.inOut"
